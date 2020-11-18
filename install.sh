@@ -75,7 +75,7 @@ echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/sys
 echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-echo 'ExecStart= mono /home/pi/QbusOpenHab/QbusClient/QbusClient.exe '$ipvar' '$uservar' '$passvar' '$snvar'' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+echo 'ExecStart= mono /home/pi/QbusOpenHab3/QbusClient/QbusClient.exe '$ipvar' '$uservar' '$passvar' '$snvar'' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
@@ -87,7 +87,7 @@ echo 'After=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.serv
 echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 echo '[Service]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-echo 'ExecStart= mono /home/pi/QbusOpenHab/QbusServer/QServer.exe' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+echo 'ExecStart= mono /home/pi/QbusOpenHab3/QbusServer/QServer.exe' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 echo '[Install]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
