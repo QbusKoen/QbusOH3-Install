@@ -32,3 +32,6 @@ Please be patient after updating. Since we clear the openHAB cache it will take 
 
 Rem: Sometimes a reboot is required. So if you run into trouble after the update, first try a reboot.
 
+## SetCTD
+
+
