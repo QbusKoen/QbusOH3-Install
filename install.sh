@@ -105,26 +105,3 @@ sudo systemctl enable qbusclient.service > /dev/null 2>&1
 sudo systemctl start qbusclient.service > /dev/null 2>&1
 kill -9 $SPIN_PID
 
-echo 'Installing Samba Share'
-sudo apt-get --assume-yes install samba samba-common-bin
-spin &
-SPIN_PID=$!
-trap "kill -9 $SPIN_PID" `seq 0 15`
-echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo 'wins support = yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo '' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo '[openHAB3]' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' comment=openHAB3 Share' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' path=/etc/openhab' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' browseable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' writeable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' only guest=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' create mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' directory mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-echo ' public=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-kill -9 $SPIN_PID
-
-echo 'Enter a password for the SMB share & repeat it: '
-sudo smbpasswd -a pi
-
