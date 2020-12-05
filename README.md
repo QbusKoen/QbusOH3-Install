@@ -34,4 +34,4 @@ Rem: Sometimes a reboot is required. So if you run into trouble after the update
 
 ## SetCTD
 
-
+An extra script setctd.sh is included. Run this script if you made changes to your controller.
