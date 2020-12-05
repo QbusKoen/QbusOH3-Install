@@ -29,5 +29,6 @@ The script will
 - Stops, clean cache and restart openHAB
 
 Please be patient after updating. Since we clear the openHAB cache it will take some time to start the first time.
+
 Rem: Sometimes a reboot is required. So if you run into trouble after the update, first try a reboot.
 
