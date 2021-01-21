@@ -53,14 +53,6 @@ trap "kill -9 $SPIN_PID" `seq 0 15`
 sudo apt-get install openjdk-11-jdk-headless
 kill -9 $SPIN_PID
 
-echo 'Setting correct rights for openHAB folders...'
-spin &
-SPIN_PID=$!
-trap "kill -9 $SPIN_PID" `seq 0 15`
-sudo chown -R pi:pi /usr/share/openhab/addons/ > /dev/null 2>&1
-sudo chown -R pi:pi /etc/openhab > /dev/null 2>&1
-kill -9 $SPIN_PID
-
 echo 'Copy Qbus JAR file'
 sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.*
 sudo cp ~/QbusOpenHab3/JAR/org.openhab.binding.qbus-3.0.0-SNAPSHOT.jar /usr/share/openhab/addons/
