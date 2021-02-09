@@ -53,17 +53,9 @@ trap "kill -9 $SPIN_PID" `seq 0 15`
 sudo apt-get install openjdk-11-jdk-headless
 kill -9 $SPIN_PID
 
-echo 'Setting correct rights for openHAB folders...'
-spin &
-SPIN_PID=$!
-trap "kill -9 $SPIN_PID" `seq 0 15`
-sudo chown -R pi:pi /usr/share/openhab/addons/ > /dev/null 2>&1
-sudo chown -R pi:pi /etc/openhab > /dev/null 2>&1
-kill -9 $SPIN_PID
-
 echo 'Copy Qbus JAR file'
 sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.*
-sudo cp ~/QbusOpenHab3/JAR/org.openhab.binding.qbus-3.0.0-SNAPSHOT.jar /usr/share/openhab/addons/
+sudo cp ~/QbusOpenHab3/JAR/org.openhab.binding.qbus-3.0.1-SNAPSHOT.jar /usr/share/openhab/addons/
 
 echo 'Preparing Qbus services'
 spin &
@@ -105,3 +97,25 @@ sudo systemctl enable qbusclient.service > /dev/null 2>&1
 sudo systemctl start qbusclient.service > /dev/null 2>&1
 kill -9 $SPIN_PID
 
+echo 'Installing Samba Share'
+sudo apt-get --assume-yes install samba samba-common-bin
+spin &
+SPIN_PID=$!
+trap "kill -9 $SPIN_PID" `seq 0 15`
+echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo 'wins support = yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo '' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo '[openHAB]' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' comment=openHAB Share' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' path=/etc/openhab' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' browseable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' writeable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' only guest=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' create mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' directory mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+echo ' public=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+kill -9 $SPIN_PID
+
+echo 'Enter a password for the SMB share & repeat it: '
+sudo smbpasswd -a openhab
