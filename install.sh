@@ -55,7 +55,7 @@ kill -9 $SPIN_PID
 
 echo 'Copy Qbus JAR file'
 sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.*
-sudo cp ~/QbusOpenHab3/JAR/org.openhab.binding.qbus-3.0.1-SNAPSHOT.jar /usr/share/openhab/addons/
+sudo cp ~/QbusOpenHab3/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/
 
 echo 'Preparing Qbus services'
 spin &
