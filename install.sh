@@ -367,7 +367,7 @@ fi
 JAVA=$(ls java-11-openjdk 2>/dev/null)
 if [[ $JAVA != "" ]]; then
         echo 'JAVA JDK 11 is not installed on your system. This is required for the correct functionality of openHAB. Do you agree to install JAVA JDK 11 (y/n)?' INSTJAVA
-        if [[ $INSTJAVA != "n" ]]; then
+        if [[ $INSTJAVA == "n" ]]; then
                 echo '- You choose to not install JAVA, You may have problems running openHAB.'
         fi
 fi
