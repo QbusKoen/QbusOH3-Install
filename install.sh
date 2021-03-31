@@ -155,8 +155,8 @@ installQbus(){
         echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+        echo 'StandardOutput=append:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+        echo 'StandardError=append:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
@@ -170,8 +170,8 @@ installQbus(){
         echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
         echo 'ExecStart= mono /usr/bin/qbus/qbusserver/QServer.exe' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
         echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'StandardOutput=file:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'StandardError=file:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+        echo 'StandardOutput=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+        echo 'StandardError=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
         echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
         echo '[Install]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
         echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
