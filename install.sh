@@ -60,60 +60,60 @@ createChangeSettings(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo rm /tmp/openhab/setctd.sh > /dev/null 2>&1
+        sudo rm /tmp/qbus/setctd.sh > /dev/null 2>&1
 
         echo "#!/bin/bash" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \"   ____  _                 ___                           _    _          ____  \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \"  / __ \| |               |__ \                         | |  | |   /\   |  _ \ \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |\"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |\"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \"  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \"                                       | |                                     \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo \"                                       |_|                                     \"" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo ''" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "read -sp 'Enter the password of your controller (attention - hidden chars) - no password? Just press enter: ' PASSVAR" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "unset password;" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "  if [[ -z $pass ]]; then" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "   echo" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "   break" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "  else" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "   echo -n '*'" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "   PASSVAR+=$pass" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "  fi" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "done" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "if [[ $PASSVAR == '' ]]; then" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "  PASSVAR='none'" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "fi" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter the ip address of your controller: ' IPVAR" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter the serial number of your controller: ' SNVAR" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "sudo rm /lib/systemd/system/qbusclient.service" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "# Create Client service" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
+        echo "echo \"   ____  _                 ___                           _    _          ____  \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \"  / __ \| |               |__ \                         | |  | |   /\   |  _ \ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \" | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \" | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \"  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \"                                       | |                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo \"                                       |_|                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo ''" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "read -sp 'Enter the password of your controller (attention - hidden chars) - no password? Just press enter: ' PASSVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "  if [[ -z $pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "   echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "   break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "   echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "   PASSVAR+=$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "if [[ $PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "  PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "read -p 'Enter the ip address of your controller: ' IPVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "read -p 'Enter the serial number of your controller: ' SNVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "sudo rm /lib/systemd/system/qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "# Create Client service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        echo "sudo systemctl daemon-reload" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "sudo systemctl restart qbusclient.service" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
+        echo "sudo systemctl daemon-reload" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "sudo systemctl restart qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        sudo cp /tmp/openhab/setctd.sh ~/setctd.sh
+        sudo cp /tmp/qbus/setctd.sh ~/setctd.sh
         sudo chmod +x ~/setctd.sh
         kill -9 $SPIN_PID
 }
@@ -495,7 +495,6 @@ esac
 
 echo ''
 echo 'The installation is finished now. To make sure everything is set up correctly and to avoid problems, we suggest to do a reboot.'
-echo 'Do you want to reboot now? (y/n) '
 read -p 'Do you want to reboot now? (y/n) ' REBOOT
 if [[ $REBOOT == "y" ]]; then
         echo 'Rebooting the system...'
