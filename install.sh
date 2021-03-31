@@ -289,7 +289,7 @@ if [[ $MONO != "" ]]; then
         echo 'Mono is already installed.'
 else
         read -p 'We did not detect Mono on your system. For the moment the Qbus client/server is based on .net. Therefore Mono is neccesary to run the client/server. Do you agree to install Mono (y/n)?' INSTMONO
-        if [[ $INSTMONO != "n" ]]; then
+        if [[ $INSTMONO == "n" ]]; then
                 echo 'Sorry, if you do not install Mono, you can not use the Qbus Client/Server application.'
                 exit 1
         fi
