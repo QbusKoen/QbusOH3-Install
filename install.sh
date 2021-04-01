@@ -75,7 +75,7 @@ createChangeSettings(){
         echo "echo ''" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo -n 'Enter the password of your controller: '
+        echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  if [[ -z $pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
