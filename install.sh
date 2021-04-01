@@ -225,7 +225,7 @@ checkOH(){
 }
 
 backupOpenhabFiles(){
-        if [[OH="OH2"]]; then
+        if [[$OH="OH2"]]; then
                 sudo cp -R /etc/openhab2 /tmp/openhab2
         else
                 sudo cp -R /etc/openhab /tmp/openhab
@@ -233,7 +233,7 @@ backupOpenhabFiles(){
 }
 
 restoreOpenhabFiles(){
-        if [[OH="OH2"]]; then
+        if [[$OH="OH2"]]; then
                 sudo cp -R /tmp/openhab2 /etc/openhab
         else
                 sudo cp -R /tmp/openhab /etc/openhab
