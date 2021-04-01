@@ -137,6 +137,14 @@ installQbus(){
 
         # Modify config file
         sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config
+		
+		# Create cleanup.sh
+		sudo sudo rm /usr/bin/qbus/qbusclient/cleanup.sh  > /dev/null 2>&1
+		echo "#!/bin/bash" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo "" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo "rm -R 'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo "rm *.zip" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+
 
         # Create directory for logging
         sudo mkdir /var/log/qbus/ > /dev/null 2>&1
