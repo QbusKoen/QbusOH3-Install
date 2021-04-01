@@ -496,6 +496,9 @@ case $OH in
 esac
 
 echo ''
+
+sudo rm -R QbusOH3-Install
+
 echo 'The installation is finished now. To make sure everything is set up correctly and to avoid problems, we suggest to do a reboot.'
 read -p 'Do you want to reboot now? (y/n) ' REBOOT
 if [[ $REBOOT == "y" ]]; then
