@@ -41,7 +41,7 @@ downloadQbus(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-        git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus> /dev/null 2>&1
+        git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus/ > /dev/null 2>&1
         kill -9 $SPIN_PID
 }
 
