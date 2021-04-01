@@ -62,8 +62,7 @@ createChangeSettings(){
         trap "kill -9 $SPIN_PID" `seq 0 15`
         sudo rm /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        echo "#!/bin/bash" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/openhab/setctd.sh > /dev/null 2>&1
+        echo "#!/bin/bash" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo \"   ____  _                 ___                           _    _          ____  \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo \"  / __ \| |               |__ \                         | |  | |   /\   |  _ \ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo \" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -78,7 +77,7 @@ createChangeSettings(){
         echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "  if [[ -z $pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "  if [[ -z \$pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "     echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "     break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -87,7 +86,7 @@ createChangeSettings(){
         echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "if [[ $PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "if [[ \$PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "        PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -103,7 +102,7 @@ createChangeSettings(){
         echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -114,8 +113,8 @@ createChangeSettings(){
         echo "sudo systemctl daemon-reload" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "sudo systemctl restart qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        sudo cp /tmp/qbus/setctd.sh ~/setctd.sh
-        sudo chmod +x ~/setctd.sh
+        sudo cp /tmp/qbus/setctd.sh ~/setctd.sh > /dev/null 2>&1
+        sudo chmod +x ~/setctd.sh > /dev/null 2>&1
         kill -9 $SPIN_PID
 }
 
