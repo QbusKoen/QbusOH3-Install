@@ -4,6 +4,8 @@
 OH2UPDATE=''
 OH3UNTEST=''
 OH3UPDATE=''
+OHNONE=''
+OHINSTALL=''
 QBUSNEW=''
 INSTMONO=''
 ISAMBA=''
@@ -366,7 +368,7 @@ if [[ $SAMBA != "" ]]; then
         fi
 else
         echo '- We did not detect Samba share on your system. You don not really need SMB, but it makes it easier to configure certain openHAB things. Do you agree to install Samba share (y/n)?' INSTSAMBA
-        if [[ $INSTSAMBA != "n" ]]; then
+        if [[ $INSTSAMBA == "n" ]]; then
                 echo '- You choose to not install SMB. This means you have to configure certain openHAB things on this device.'
         fi
 fi
@@ -398,6 +400,7 @@ case $OH in
                 ;;
         None)
                 echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
+		OHNONE='y'
                 ;;
 esac
 
@@ -445,6 +448,12 @@ if [[ $OH3UPDATE == "y" ]]; then
         restoreOpenhabFiles
 fi
 
+if [[ $OHNONE == "y" ]]; then
+        # Install openHAB testing (3.1.0M2)
+        echo '* Install openHAB...'
+        installOpenhab3
+fi
+
 if [[ $INSTSAMBA == "y" ]]; then
         echo '* Install SMB...'
         installSamba
@@ -469,6 +478,10 @@ echo '* Starting openHAB...'
 case $OH in
         OH2)
                 echo "- We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2."
+		sudo /bin/systemctl stop openhab.service
+                sudo openhab-cli clean-cache
+                sudo /bin/systemctl start openhab.service
+                echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
         OH3Unstable)
                 echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
@@ -493,6 +506,10 @@ case $OH in
                 sudo /bin/systemctl start openhab.service
                 echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
+	none)
+		echo " - openHAB is installed, please hold on while we start openHAB..."
+		sudo /bin/systemctl restart openhab.service
+		;;
 esac
 
 echo ''
