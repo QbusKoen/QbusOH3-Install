@@ -386,22 +386,16 @@ checkOH
 
 case $OH in
         OH2)
-                read -p '- We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3).'\
-                'For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used.'\
-                'Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)' OH2UPDATE
+                read -p '- We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)' OH2UPDATE
                 ;;
         OH3Unstable)
-                read -p '- We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. '\
-                'The Qbus Binding will work on this version, but you should be aware that there can be bugs in openHAB itself. '\
-                'Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (n)' OH3UNTEST
+                read -p '- We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (n)' OH3UNTEST
                 ;;
         OH3Testing)
                 echo '- We have detected openHAB running the testing (3.1.0M2) version. This version is compatible with the Qbus Binding.'
                 ;;
         OH3Stable)
-                read -p '- We have detected openHAB running the stable version (3.0.1). '\
-                'For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. '\
-                'Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n)' OH3UPDATE
+                read -p '- We have detected openHAB running the stable version (3.0.1). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n)' OH3UPDATE
                 ;;
         None)
                 echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
