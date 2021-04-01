@@ -399,7 +399,7 @@ case $OH in
         None)
                 echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
                 ;;
-esacls
+esac
 
 
 
