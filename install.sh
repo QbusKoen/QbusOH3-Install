@@ -82,7 +82,7 @@ createChangeSettings(){
         echo "     break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "     echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "     PASSVAR+=$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "     PASSVAR+=\$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
