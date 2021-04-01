@@ -263,10 +263,10 @@ installOpenhab3(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-        wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add -
-        sudo apt-get install apt-transport-https
-        echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list
-        sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab
+        wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
+        sudo apt-get install apt-transport-https > /dev/null 2>&1
+        echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
+        sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1y
         kill -9 $SPIN_PID
 }
 
@@ -380,7 +380,6 @@ if [[ $JAVA != "" ]]; then
         fi
 fi
 
-
 # ---------------- Check openHAB -----------------------
 checkOH
 
@@ -389,18 +388,19 @@ case $OH in
                 read -p '- We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)' OH2UPDATE
                 ;;
         OH3Unstable)
-                read -p '- We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (n)' OH3UNTEST
+                read -p '- We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (y/n) ' OH3UNTEST
                 ;;
         OH3Testing)
                 echo '- We have detected openHAB running the testing (3.1.0M2) version. This version is compatible with the Qbus Binding.'
                 ;;
         OH3Stable)
-                read -p '- We have detected openHAB running the stable version (3.0.1). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n)' OH3UPDATE
+                read -p '- We have detected openHAB running the stable version (3.0.1). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n) ' OH3UPDATE
                 ;;
         None)
                 echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
                 ;;
-esac
+esacls
+
 
 
 if [[ $INSTMONO == "y" ]]; then
