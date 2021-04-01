@@ -75,21 +75,22 @@ createChangeSettings(){
         echo "echo ''" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "read -sp 'Enter the password of your controller (attention - hidden chars) - no password? Just press enter: ' PASSVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo -n 'Enter the password of your controller: '
         echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  if [[ -z $pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "   echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "   break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "     echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "     break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "   echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "   PASSVAR+=$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "     echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "     PASSVAR+=$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "if [[ $PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "  PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "        PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "read -p 'Enter the ip address of your controller: ' IPVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "read -p 'Enter the serial number of your controller: ' SNVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
