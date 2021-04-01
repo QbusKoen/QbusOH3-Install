@@ -142,8 +142,8 @@ installQbus(){
 		sudo sudo rm /usr/bin/qbus/qbusclient/cleanup.sh  > /dev/null 2>&1
 		echo "#!/bin/bash" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
 		echo "" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo "rm -R 'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo "rm *.zip" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo "rm -R /usr/bin/qbus/qbusclient/'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo "rm /usr/bin/qbus/qbusclient/*.zip" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
 
 
         # Create directory for logging
