@@ -455,24 +455,24 @@ if [[ $OH3UNTEST == "y" ]]; then
 fi
 
 if [[ $OH3UPDATE == "y" ]]; then
-        # Remove stable version and install openHAB testing (3.1.0M2)
-        echo '* Install openHAB testing (3.1.0M2)...'
-        backupOpenhabFiles
-        installOpenhab3
-        restoreOpenhabFiles
+	# Remove stable version and install openHAB testing (3.1.0M2)
+	echo '* Install openHAB testing (3.1.0M2)...'
+	backupOpenhabFiles
+	installOpenhab3
+	restoreOpenhabFiles
 fi
 
 if [[ $OH == "none" ]]; then
-        # Install openHAB testing (3.1.0M2)
-        echo '* Install openHAB testing (3.1.0M2)...'
-        installOpenhab3
+	# Install openHAB testing (3.1.0M2)
+	echo '* Install openHAB testing (3.1.0M2)...'
+	installOpenhab3
 fi
 
 if [[ $INSTSAMBA == "y" ]]; then
-        echo '* Install SMB...'
-        installSamba
-        echo '- Enter a password for the SMB share for the user openhab & repeat it (attention: the password will not be shown): '
-        sudo smbpasswd -a openhab
+	echo '* Install SMB...'
+	installSamba
+	echo '- Enter a password for the SMB share for the user openhab & repeat it (attention: the password will not be shown): '
+	sudo smbpasswd -a openhab
 fi
 
 echo '* Copy Qbus JAR to openHAB...'
@@ -490,40 +490,40 @@ sudo rm -R ~/QbusOpenHab/ > /dev/null 2>&1
 
 echo '* Starting openHAB...'
 case $OH in
-        OH2)
-                echo "- We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2."
-				sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
-                sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-                echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
-                ;;
-        OH3Unstable)
-                echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
-                echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
-                sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-                echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
-                ;;
-        OH3Stable)
-                echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
-                echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
-                sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-                echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
-                ;;
-        OH3Testing)
-                echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
-                sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-                echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
-                ;;
-		none)
-			echo '- openHAB is installed, please hold on while we start openHAB...'
-			sudo /bin/systemctl restart openhab.service > /dev/null 2>&1
-			;;
+	OH2)
+		echo "- We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2."
+		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo openhab-cli clean-cache
+		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		;;
+	OH3Unstable)
+		echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
+		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo openhab-cli clean-cache
+		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		;;
+	OH3Stable)
+		echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
+		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo openhab-cli clean-cache
+		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		;;
+	OH3Testing)
+		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo openhab-cli clean-cache
+		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		;;
+	none)
+		echo '- openHAB is installed, please hold on while we start openHAB...'
+		sudo /bin/systemctl restart openhab.service > /dev/null 2>&1
+		;;
 esac
 
 echo ''
