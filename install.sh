@@ -439,7 +439,7 @@ fi
 
 if [[ $OH2UPDATE == "y" ]]; then
         # Upgrade from openHAB2 to openHAB testing (3.1.0M2)
-        echo '* Install openHAB...'
+        echo '* Install openHAB testing (3.1.0M2)...'
         backupOpenhabFiles
         sudo apt purge --assume-yes openhab2
         installOpenhab3
@@ -448,7 +448,7 @@ fi
 
 if [[ $OH3UNTEST == "y" ]]; then
         # Remove unstable version and install openHAB testing (3.1.0M2)
-        echo '* Install openHAB...'
+        echo '* Install openHAB testing (3.1.0M2)...'
         backupOpenhabFiles
         installOpenhab3
         restoreOpenhabFiles
@@ -456,7 +456,7 @@ fi
 
 if [[ $OH3UPDATE == "y" ]]; then
         # Remove stable version and install openHAB testing (3.1.0M2)
-        echo '* Install openHAB...'
+        echo '* Install openHAB testing (3.1.0M2)...'
         backupOpenhabFiles
         installOpenhab3
         restoreOpenhabFiles
@@ -464,14 +464,14 @@ fi
 
 if [[ $OH == "none" ]]; then
         # Install openHAB testing (3.1.0M2)
-        echo '* Install openHAB...'
+        echo '* Install openHAB testing (3.1.0M2)...'
         installOpenhab3
 fi
 
 if [[ $INSTSAMBA == "y" ]]; then
         echo '* Install SMB...'
         installSamba
-        echo '- Enter a password for the SMB share for the user openhab & repeat it: '
+        echo '- Enter a password for the SMB share for the user openhab & repeat it (attention: the password will not be shown): '
         sudo smbpasswd -a openhab
 fi
 
