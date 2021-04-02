@@ -293,9 +293,9 @@ echo "  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\_
 echo "                                       | |                                     "
 echo "                                       |_|                                     "
 echo ""
-echo "Relaese date 28/03/2021 by ks@qbus.be"
+echo "Relaese date 02/04/2021 by ks@qbus.be"
 echo ""
-echo 'Welcom to the Qbus2openHAB installer.'
+echo 'Welcome to the Qbus2openHAB installer.'
 echo "At the current moment the openHAB binding for Qbus is being checked by openHAB developpers, so you won't find the binding in the repository yet."
 echo "Therefore we will install he current JAR file so you can use the binding anyway, you just don't have to install it from the Bindings list. It will be pre-installed."
 echo "Since we are developping for the latest release of openHAB, the testing (3.1.0M2) version, we will install this version. If you already have an openHAB setup, then "\
