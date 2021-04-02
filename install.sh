@@ -400,7 +400,6 @@ case $OH in
                 ;;
         None)
                 echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
-		OHNONE='y'
                 ;;
 esac
 
@@ -448,7 +447,7 @@ if [[ $OH3UPDATE == "y" ]]; then
         restoreOpenhabFiles
 fi
 
-if [[ $OHNONE == "y" ]]; then
+if [[ $OH == "none" ]]; then
         # Install openHAB testing (3.1.0M2)
         echo '* Install openHAB...'
         installOpenhab3
