@@ -49,7 +49,7 @@ installJava11(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo apt-get --assume-yes install openjdk-11-jdk-headless
+        sudo apt-get --assume-yes install openjdk-11-jdk-headless > /dev/null 2>&1
         kill -9 $SPIN_PID
 }
 
@@ -243,8 +243,8 @@ restoreOpenhabFiles(){
 installSamba(){
         spin &
         SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo apt-get --assume-yes install samba samba-common-bin
+        trap "kill -9 $SPIN_PID" `seq 0 15
+        sudo apt-get --assume-yes install samba samba-common-bin` > /dev/null 2>&1
         echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
         echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
         echo 'wins support = yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
@@ -265,6 +265,7 @@ installOpenhab3(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
+		sudo apt-get install apt-transport-https > /dev/null 2>&1
         wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
         sudo apt-get install apt-transport-https > /dev/null 2>&1
         echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
@@ -276,8 +277,8 @@ updateRpi(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-	sudo apt-get  --assume-yes update
-	sudo apt-get  --assume-yes upgrade
+		sudo apt-get  --assume-yes update
+		sudo apt-get  --assume-yes upgrade
         kill -9 $SPIN_PID
 }
 
@@ -383,12 +384,14 @@ else
 fi
 
 # ---------------- Check Java JDK 11 -----------------------
-JAVA=$(ls java-11-openjdk 2>/dev/null)
-if [[ $JAVA != "" ]]; then
-        echo 'JAVA JDK 11 is not installed on your system. This is required for the correct functionality of openHAB. Do you agree to install JAVA JDK 11 (y/n)?' INSTJAVA
-        if [[ $INSTJAVA == "n" ]]; then
-                echo '- You choose to not install JAVA, You may have problems running openHAB.'
-        fi
+JAVA=$(java -version 2>/dev/null)
+if [[ $JAVA =~ "11." ]]; then
+	echo ' - JAVA JDK 11 is installed.'
+else
+	read -p '- JAVA JDK 11 is not installed on your system. This is required for the correct functionality of openHAB. Do you agree to install JAVA JDK 11 (y/n)?' INSTJAVA
+	if [[ $INSTJAVA == "n" ]]; then
+			echo '- You choose to not install JAVA, You may have problems running openHAB.'
+	fi
 fi
 
 # ---------------- Check openHAB -----------------------
@@ -489,43 +492,43 @@ echo '* Starting openHAB...'
 case $OH in
         OH2)
                 echo "- We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2."
-		sudo /bin/systemctl stop openhab.service
+				sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
                 sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service
+                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
                 echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
         OH3Unstable)
                 echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
                 echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service
+                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
                 sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service
+                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
                 echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
         OH3Stable)
                 echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
                 echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service
+                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
                 sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service
+                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
                 echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
         OH3Testing)
                 echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-                sudo /bin/systemctl stop openhab.service
+                sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
                 sudo openhab-cli clean-cache
-                sudo /bin/systemctl start openhab.service
+                sudo /bin/systemctl start openhab.service > /dev/null 2>&1
                 echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
                 ;;
-	none)
-		echo " - openHAB is installed, please hold on while we start openHAB..."
-		sudo /bin/systemctl restart openhab.service
-		;;
+		none)
+			echo '- openHAB is installed, please hold on while we start openHAB...'
+			sudo /bin/systemctl restart openhab.service > /dev/null 2>&1
+			;;
 esac
 
 echo ''
 
-sudo rm -R QbusOH3-Install
+sudo rm -R ~/QbusOH3-Install > /dev/null 2>&1
 
 echo 'The installation is finished now. To make sure everything is set up correctly and to avoid problems, we suggest to do a reboot.'
 read -p 'Do you want to reboot now? (y/n) ' REBOOT
