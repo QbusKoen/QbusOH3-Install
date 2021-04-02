@@ -54,8 +54,8 @@ installJava11(){
 }
 
 copyJar(){
-        sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.* /tmp/qbus> /dev/null 2>&1
-        sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/ /tmp/qbus> /dev/null 2>&1
+        sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.* > /dev/null 2>&1
+        sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/ > /dev/null 2>&1
 }
 
 createChangeSettings(){
