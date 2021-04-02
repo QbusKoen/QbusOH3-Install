@@ -272,6 +272,15 @@ installOpenhab3(){
         kill -9 $SPIN_PID
 }
 
+updateRpi(){
+        spin &
+        SPIN_PID=$!
+        trap "kill -9 $SPIN_PID" `seq 0 15`
+	sudo apt-get  --assume-yes update
+	sudo apt-get  --assume-yes upgrade
+        kill -9 $SPIN_PID
+}
+
 
 # ============================== Start installation ==============================
 echo "   ____  _                 ___                           _    _          ____  "
@@ -403,7 +412,10 @@ case $OH in
                 ;;
 esac
 
+# ---------------- Install -----------------------
 
+echo '* We will start by updating and upgrading your system.'
+updateRpi
 
 if [[ $INSTMONO == "y" ]]; then
         echo '* Installing Mono...'
