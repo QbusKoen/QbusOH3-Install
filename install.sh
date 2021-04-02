@@ -376,7 +376,7 @@ if [[ $SAMBA != "" ]]; then
           sudo smbpasswd -a openhab
         fi
 else
-        echo '- We did not detect Samba share on your system. You don not really need SMB, but it makes it easier to configure certain openHAB things. Do you agree to install Samba share (y/n)?' INSTSAMBA
+        read -p '- We did not detect Samba share on your system. You don not really need SMB, but it makes it easier to configure certain openHAB things. Do you agree to install Samba share (y/n)?' INSTSAMBA
         if [[ $INSTSAMBA == "n" ]]; then
                 echo '- You choose to not install SMB. This means you have to configure certain openHAB things on this device.'
         fi
