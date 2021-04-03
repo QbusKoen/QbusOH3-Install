@@ -104,7 +104,7 @@ createChangeSettings(){
         echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
         echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -163,7 +163,7 @@ installQbus(){
         echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 50' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+        echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'StandardOutput=append:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
         echo 'StandardError=append:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
