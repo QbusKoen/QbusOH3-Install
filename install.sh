@@ -52,266 +52,274 @@ echoInColorP(){
 }
 
 installMono(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo apt-get --assume-yes install mono-runtime mono-vbnc mono-complete > /dev/null 2>&1
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get --assume-yes install mono-runtime mono-vbnc mono-complete > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 downloadQbus(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-        git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus/ > /dev/null 2>&1
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus/ > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 installJava11(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo apt-get --assume-yes install openjdk-11-jdk-headless > /dev/null 2>&1
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get --assume-yes install openjdk-11-jdk-headless > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 copyJar(){
-        sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.* > /dev/null 2>&1
-        sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/ > /dev/null 2>&1
+	sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.* > /dev/null 2>&1
+	sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/ > /dev/null 2>&1
 }
 
 createChangeSettings(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-        sudo rm /tmp/qbus/setctd.sh > /dev/null 2>&1
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	sudo rm /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        echo "#!/bin/bash" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \"   ____  _                 ___                           _    _          ____  \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \"  / __ \| |               |__ \                         | |  | |   /\   |  _ \ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \" | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \"  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \"                                       | |                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo \"                                       |_|                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo ''" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "  if [[ -z \$pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "     echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "     break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "     echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "     PASSVAR+=\$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "if [[ \$PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "        PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter the ip address of your controller: ' IPVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "read -p 'Enter the serial number of your controller: ' SNVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "sudo rm /lib/systemd/system/qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "# Create Client service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "#!/bin/bash" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \"   ____  _                 ___                           _    _          ____  \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \"  / __ \| |               |__ \                         | |  | |   /\   |  _ \ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \" | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \" | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |\"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \"  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \"                                       | |                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo \"                                       |_|                                     \"" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo ''" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "read -p 'Enter username of your controller: ' USERVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo -n 'Enter the password of your controller: '" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "unset password;" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "while IFS= read -r -s -n1 pass; do" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "  if [[ -z \$pass ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "     echo" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "     break" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "  else" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "     echo -n '*'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "     PASSVAR+=\$pass" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "  fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "done" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "if [[ \$PASSVAR == '' ]]; then" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "        PASSVAR='none'" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "fi" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "read -p 'Enter the ip address of your controller: ' IPVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "read -p 'Enter the serial number of your controller: ' SNVAR" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "sudo rm /lib/systemd/system/qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "# Create Client service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        echo "sudo systemctl daemon-reload" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-        echo "sudo systemctl restart qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "sudo systemctl daemon-reload" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "sudo systemctl restart qbusclient.service" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 
-        sudo cp /tmp/qbus/setctd.sh ~/setctd.sh > /dev/null 2>&1
-        sudo chmod +x ~/setctd.sh > /dev/null 2>&1
-        kill -9 $SPIN_PID
+	sudo cp /tmp/qbus/setctd.sh ~/setctd.sh > /dev/null 2>&1
+	sudo chmod +x ~/setctd.sh > /dev/null 2>&1
+	kill -9 $SPIN_PID
 }
 
 installQbus(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
 
-        # Remove old files
-        sudo rm -R /usr/bin/qbus > /dev/null 2>&1
+	# Remove old files
+	sudo rm -R /usr/bin/qbus > /dev/null 2>&1
 
-        # Create software directory
-        sudo mkdir /usr/bin/qbus > /dev/null 2>&1
-        sudo mkdir /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
-        sudo mkdir /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
+	# Create software directory
+	sudo mkdir /usr/bin/qbus > /dev/null 2>&1
+	sudo mkdir /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
+	sudo mkdir /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
-        # Copy files to correct location
-        sudo cp -R /tmp/qbus/QbusClient/* /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
-        sudo cp -R /tmp/qbus/QbusServer/* /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
+	# Copy files to correct location
+	sudo cp -R /tmp/qbus/QbusClient/* /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
+	sudo cp -R /tmp/qbus/QbusServer/* /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
-        # Modify config file
-        sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
-		
-		# Create cleanup.sh
-		sudo sudo rm /usr/bin/qbus/qbusclient/cleanup.sh  > /dev/null 2>&1
-		echo '#!/bin/bash' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo '' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo "rm -R /usr/bin/qbus/qbusclient/'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo 'rm /usr/bin/qbus/qbusclient/*.zip' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		sudo chmod +x /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		sudo sed -i "s|loc|/usr/bin/qbus/qbusclient|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
+	# Modify config file
+	sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
+	
+	# Create cleanup.sh
+	sudo sudo rm /usr/bin/qbus/qbusclient/cleanup.sh  > /dev/null 2>&1
+	echo '#!/bin/bash' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+	echo '' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+	echo "rm -R /usr/bin/qbus/qbusclient/'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+	echo 'rm /usr/bin/qbus/qbusclient/*.zip' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+	sudo chmod +x /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+	sudo sed -i "s|loc|/usr/bin/qbus/qbusclient|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
 
-        # Create directory for logging
-        sudo mkdir /var/log/qbus/ > /dev/null 2>&1
+	# Create directory for logging
+	sudo mkdir /var/log/qbus/ > /dev/null 2>&1
 
-        # Deleting old service files
-        sudo rm /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        sudo rm /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	# Deleting old service files
+	sudo rm /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	sudo rm /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 
 
-        # Create Client service
-        echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'StandardOutput=append:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'StandardError=append:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
-        echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	# Create Client service
+	echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'Description=Client for Qbus communication' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'After=multi-user.target qbusserver.service' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo '[Service]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '$IPVAR' '$USERVAR' '$PASSVAR' '$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'StandardOutput=append:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'StandardError=append:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
+	echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1
 
-        # Create Server service
-        echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'Description=Server for Qbus communication' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'After=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo '[Service]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'ExecStart= mono /usr/bin/qbus/qbusserver/QServer.exe' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'StandardOutput=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'StandardError=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo '[Install]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
-        echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	# Create Server service
+	echo '[Unit]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'Description=Server for Qbus communication' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'After=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo '[Service]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'ExecStart= mono /usr/bin/qbus/qbusserver/QServer.exe' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'StandardOutput=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'StandardError=append:/var/log/qbus/qbusserver.log' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo '' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo '[Install]' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
+	echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusserver.service > /dev/null 2>&1
 
-        kill -9 $SPIN_PID
+	kill -9 $SPIN_PID
 }
 
 startQbus(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-		
-        sudo systemctl daemon-reload > /dev/null 2>&1
-        sudo systemctl enable qbusserver.service > /dev/null 2>&1
-        sudo systemctl start qbusserver.service > /dev/null 2>&1
-        sudo systemctl enable qbusclient.service > /dev/null 2>&1
-        sudo systemctl start qbusclient.service > /dev/null 2>&1
-		
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo systemctl daemon-reload > /dev/null 2>&1
+	sudo systemctl enable qbusserver.service > /dev/null 2>&1
+	sudo systemctl start qbusserver.service > /dev/null 2>&1
+	sudo systemctl enable qbusclient.service > /dev/null 2>&1
+	sudo systemctl start qbusclient.service > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 checkOH(){
-        OH2=$(ls /usr/share/openhab2 2>/dev/null)
-        OH3=$(ls /usr/share/openhab 2>/dev/null)
+	OH2=$(ls /usr/share/openhab2 2>/dev/null)
+	OH3=$(ls /usr/share/openhab 2>/dev/null)
 
-        if [[ $OH2 != "" ]]; then
-          # OH2 found
-          OH="OH2"
-        elif [[ $OH3 != "" ]]; then
-          # OH3 found, checking release
-          OH3V=$(cat /etc/apt/sources.list.d/openhab.list)
-          if [[ $OH3V =~ "unstable" ]]; then
-                OH="OH3Unstable"
-          elif [[ $OH3V =~ "testing" ]]; then
-                OH="OH3Testing"
-          elif [[ $OH3V =~ "stable" ]]; then
-                OH="OH3Stable"
-          fi
-        else
-          # OH not installed
-          OH = "None"
-        fi
+	if [[ $OH2 != "" ]]; then
+	  # OH2 found
+	  OH="OH2"
+	elif [[ $OH3 != "" ]]; then
+	  # OH3 found, checking release
+	  OH3V=$(cat /etc/apt/sources.list.d/openhab.list)
+	  if [[ $OH3V =~ "unstable" ]]; then
+			OH="OH3Unstable"
+	  elif [[ $OH3V =~ "testing" ]]; then
+			OH="OH3Testing"
+	  elif [[ $OH3V =~ "stable" ]]; then
+			OH="OH3Stable"
+	  fi
+	else
+	  # OH not installed
+	  OH = "None"
+	fi
 }
 
 backupOpenhabFiles(){
-        if [[$OH="OH2"]]; then
-                sudo cp -R /etc/openhab2 /tmp/openhab2 > /dev/null 2>&1
-        else
-                sudo cp -R /etc/openhab /tmp/openhab > /dev/null 2>&1
-        fi
+	if [[$OH="OH2"]]; then
+			sudo cp -R /etc/openhab2 /tmp/openhab2 > /dev/null 2>&1
+	else
+			sudo cp -R /etc/openhab /tmp/openhab > /dev/null 2>&1
+	fi
 }
 
 restoreOpenhabFiles(){
-        if [[$OH="OH2"]]; then
-                sudo cp -R /tmp/openhab2 /etc/openhab
-        else
-				sudo rm /etc/openhab
-                sudo cp -R /tmp/openhab /etc/openhab
-        fi
+	if [[$OH="OH2"]]; then
+			sudo rm /etc/openhab
+			sudo mv /tmp/openhab2 /tmp/openhab
+			sudo cp -R /tmp/openhab2 /etc/
+	else
+			sudo rm /etc/openhab
+			sudo cp -R /tmp/openhab /etc/
+	fi
 }
 
 installSamba(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15
-		
-        sudo apt-get --assume-yes install samba samba-common-bin` > /dev/null 2>&1
-        echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo 'wins support = yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo '' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo '[openHAB]' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' comment=openHAB Share' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' path=/etc/openhab' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' browseable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' writeable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' only guest=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' create mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' directory mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-        echo ' public=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
-		
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15
+	
+	sudo apt-get --assume-yes install samba samba-common-bin` > /dev/null 2>&1
+	echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo 'wins support = yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo '' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo '[openHAB]' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' comment=openHAB Share' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' path=/etc/openhab' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' browseable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' writeable=Yes' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' only guest=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' create mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' directory mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	echo ' public=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 installOpenhab3(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-		
-		sudo apt-get install apt-transport-https > /dev/null 2>&1
-        wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
-        sudo apt-get install apt-transport-https > /dev/null 2>&1
-        echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
-        sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
-		
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get install apt-transport-https > /dev/null 2>&1
+	wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
+	sudo apt-get install apt-transport-https > /dev/null 2>&1
+	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
+	sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 updateRpi(){
-        spin &
-        SPIN_PID=$!
-        trap "kill -9 $SPIN_PID" `seq 0 15`
-		
-		sudo apt-get  --assume-yes update > /dev/null 2>&1
-		sudo apt-get  --assume-yes upgrade > /dev/null 2>&1
-		
-        kill -9 $SPIN_PID
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get  --assume-yes update > /dev/null 2>&1
+	sudo apt-get  --assume-yes upgrade > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
 }
 
 
@@ -379,21 +387,21 @@ echoInColor
 
 QBUS=$(ls /lib/systemd/system/qbusclient.service 2>/dev/null)
 if [[ $QBUS != "" ]]; then
-        QBUS2=$(ls /usr/bin/qbus/ 2>/dev/null)
-        if [[ $QBUS2 != "" ]]; then
-                DISPLTEXT='     -You already have Qbus client and server installed. The files will be updated.'
-				DISPLCOLOR=${GREEN}
-				echoInColor
-        else
-                DISPLTEXT='     -We have detected the previous version of the Qbus client/server. This version will be removed and the newest will be installed. The directory ~/QbusOpenHab will no longer be used. '\
-                'The Qbus Client/Server application will be installed in /usr/bin/qbus/. We will try to remove ~/QbusOpenHab if this fails, please remove the directory.'
-				DISPLCOLOR=${ORANGE}
-				echoInColor
-        fi
-else
-        DISPLTEXT='     -Qbus client/server is not found on your sytem. We will install this.'
-		DISPLCOLOR=${YELLOW}
+	QBUS2=$(ls /usr/bin/qbus/ 2>/dev/null)
+	if [[ $QBUS2 != "" ]]; then
+		DISPLTEXT='     -You already have Qbus client and server installed. The files will be updated.'
+		DISPLCOLOR=${GREEN}
 		echoInColor
+	else
+		DISPLTEXT='     -We have detected the previous version of the Qbus client/server. This version will be removed and the newest will be installed. The directory ~/QbusOpenHab will no longer be used. '\
+		'The Qbus Client/Server application will be installed in /usr/bin/qbus/. We will try to remove ~/QbusOpenHab if this fails, please remove the directory.'
+		DISPLCOLOR=${ORANGE}
+		echoInColor
+	fi
+else
+	DISPLTEXT='     -Qbus client/server is not found on your sytem. We will install this.'
+	DISPLCOLOR=${YELLOW}
+	echoInColor
 fi
 echo ''
 
@@ -564,10 +572,10 @@ echoInColor
 updateRpi
 
 if [[ $INSTMONO == "y" ]]; then
-        DISPLTEXT='* Installing Mono...'
-		echoInColor
-        installMono
-		echo ''
+	DISPLTEXT='* Installing Mono...'
+	echoInColor
+	installMono
+	echo ''
 fi
 
 DISPLTEXT='* Downloading Qbus client and server...'
@@ -581,32 +589,32 @@ installQbus
 echo ''
 
 if [[ $INSTJAVA == "y" ]]; then
-        DISPLTEXT='* Installing Java JDK 11...'
-		echoInColor
-        installJava11
-		echo ''
+	DISPLTEXT='* Installing Java JDK 11...'
+	echoInColor
+	installJava11
+	echo ''
 fi
 
 
 if [[ $OH2UPDATE == "y" ]]; then
-        # Upgrade from openHAB2 to openHAB testing (3.1.0M2)
-        DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
-		echoInColor
-        backupOpenhabFiles
-        sudo apt purge --assume-yes openhab2
-        installOpenhab3
-        restoreOpenhabFiles
-		echo ''
+	# Upgrade from openHAB2 to openHAB testing (3.1.0M2)
+	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	echoInColor
+	backupOpenhabFiles
+	sudo apt purge --assume-yes openhab2
+	installOpenhab3
+	restoreOpenhabFiles
+	echo ''
 fi
 
 if [[ $OH3UNTEST == "y" ]]; then
-        # Remove unstable version and install openHAB testing (3.1.0M2)
-		echoInColor
-        DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
-        backupOpenhabFiles
-        installOpenhab3
-        restoreOpenhabFiles
-		echo ''
+	# Remove unstable version and install openHAB testing (3.1.0M2)
+	echoInColor
+	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	backupOpenhabFiles
+	installOpenhab3
+	restoreOpenhabFiles
+	echo ''
 fi
 
 if [[ $OH3UPDATE == "y" ]]; then
@@ -623,6 +631,7 @@ if [[ $OH == "none" ]]; then
 	# Install openHAB testing (3.1.0M2)
 	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
 	echoInColor
+	backupOpenhabFiles
 	installOpenhab3
 	echo ''
 fi
@@ -654,9 +663,9 @@ case $OH in
 	OH2)
 		DISPLTEXT='  - We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2.'
 		echoInColor
-		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
-		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		sudo systemctl start openhab.service > /dev/null 2>&1
 		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
 		echoInColor
 		echo ''
@@ -666,9 +675,9 @@ case $OH in
 		echoInColor
 		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
 		echoInColor
-		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
-		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		sudo systemctl start openhab.service > /dev/null 2>&1
 		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
 		echoInColor
 		echo ''
@@ -678,9 +687,9 @@ case $OH in
 		echoInColor
 		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
 		echoInColor
-		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
-		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		sudo systemctl start openhab.service > /dev/null 2>&1
 		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
 		echoInColor
 		echo ''
@@ -688,9 +697,9 @@ case $OH in
 	OH3Testing)
 		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
 		echoInColor
-		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
+		sudo systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
-		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
+		sudo systemctl start openhab.service > /dev/null 2>&1
 		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
 		echoInColor
 		echo ''
@@ -698,7 +707,7 @@ case $OH in
 	none)
 		DISPLTEXT='  - openHAB is installed, please hold on while we start openHAB...'
 		echoInColor
-		sudo /bin/systemctl restart openhab.service > /dev/null 2>&1
+		sudo systemctl restart openhab.service > /dev/null 2>&1
 		;;
 esac
 
