@@ -553,15 +553,15 @@ case $OH in
 esac
 
 # ---------------- Install -----------------------
-DISPLTEXT='***************************************************************************************************************'
+DISPLTEXT='****************************************************************************************************************'
 DISPLCOLOR=${ORANGE}
 echoInColor
 
-DISPLTEXT='* Everything is set, we will start the installation. As they say: Now it is time to relax and drik a coffee... *'
+DISPLTEXT='* Everything is set, we will start the installation. As they say: Now it is time to relax and drink a coffee... *'
 DISPLCOLOR=${ORANGE}
 echoInColor
 
-DISPLTEXT='***************************************************************************************************************'
+DISPLTEXT='****************************************************************************************************************'
 DISPLCOLOR=${ORANGE}
 echoInColor
 
