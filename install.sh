@@ -90,6 +90,7 @@ createChangeSettings(){
 	spin &
 	SPIN_PID=$!
 	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
 	sudo rm /tmp/qbus/setctd.sh > /dev/null 2>&1
 
 	echo "#!/bin/bash" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -145,6 +146,7 @@ createChangeSettings(){
 
 	sudo cp /tmp/qbus/setctd.sh ~/setctd.sh > /dev/null 2>&1
 	sudo chmod +x ~/setctd.sh > /dev/null 2>&1
+	
 	kill -9 $SPIN_PID
 }
 
