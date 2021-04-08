@@ -259,15 +259,15 @@ checkOH(){
 
 backupOpenhabFiles(){
 	if [[$OH="OH2"]]; then
-			sudo cp -R /etc/openhab2 /tmp/openhab2 > /dev/null 2>&1
+			sudo cp -R /etc/openhab2 /tmp/ > /dev/null 2>&1
 	else
-			sudo cp -R /etc/openhab /tmp/openhab > /dev/null 2>&1
+			sudo cp -R /etc/openhab /tmp/ > /dev/null 2>&1
 	fi
 }
 
 restoreOpenhabFiles(){
 	if [[$OH="OH2"]]; then
-			sudo rm /etc/openhab
+			sudo rm /etc/openhab2
 			sudo mv /tmp/openhab2 /tmp/openhab
 			sudo cp -R /tmp/openhab2 /etc/
 	else
@@ -306,9 +306,28 @@ installOpenhab3(){
 	
 	sudo apt-get install apt-transport-https > /dev/null 2>&1
 	wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
-	sudo apt-get install apt-transport-https > /dev/null 2>&1
 	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
 	sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
+}
+
+removeOpenHAB3(){
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get --assume-yes purge openhab > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
+}
+
+removeOpenHAB2(){
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	sudo apt-get --assume-yes purge openhab2 > /dev/null 2>&1
 	
 	kill -9 $SPIN_PID
 }
@@ -319,7 +338,7 @@ updateRpi(){
 	trap "kill -9 $SPIN_PID" `seq 0 15`
 	
 	sudo apt-get  --assume-yes update > /dev/null 2>&1
-	sudo apt-get  --assume-yes upgrade > /dev/null 2>&1
+	#sudo apt-get  --assume-yes upgrade #> /dev/null 2>&1
 	
 	kill -9 $SPIN_PID
 }
@@ -422,7 +441,6 @@ DISPLTEXT='-- Configure client to communicate with CTD controller...'
 DISPLCOLOR=${YELLOW}
 echoInColor
 
-echo ''
 read -p "$(echo -e $YELLOW"     -Enter username of your controller: "$NC)" USERVAR
 
 
@@ -528,8 +546,6 @@ echoInColor
 
 checkOH
 
-echo ''
-
 case $OH in
 	OH2)
 		read -p "$(echo -e $YELLOW"     -We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)? " $NC)" OH2UPDATE
@@ -538,7 +554,7 @@ case $OH in
 		read -p "$(echo -e $YELLOW"     -We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (y/n) " $NC)" OH3UNTEST
 		;;
 	OH3Testing)
-		DISPLTEXT='     -We have detected openHAB running the testing (3.1.0M2) version. This version is compatible with the Qbus Binding.'
+		DISPLTEXT='     -We have detected openHAB running the testing (3.1.0Mx) version. We will upgrade to be shure to have the latest Milestone release.'
 		DISPLCOLOR=${GREEN}
 		echoInColor
 		;;
@@ -553,6 +569,8 @@ case $OH in
 esac
 
 # ---------------- Install -----------------------
+echo ''
+
 DISPLTEXT='****************************************************************************************************************'
 DISPLCOLOR=${ORANGE}
 echoInColor
@@ -567,11 +585,11 @@ echoInColor
 
 echo ''
 
-DISPLTEXT='* Updating and upgrading your system.'
-DISPLCOLOR=${YELLOW}
-echoInColor
+#DISPLTEXT='* Updating your system.'
+#DISPLCOLOR=${YELLOW}
+#echoInColor
 
-updateRpi
+#updateRpi
 
 if [[ $INSTMONO == "y" ]]; then
 	DISPLTEXT='* Installing Mono...'
@@ -599,8 +617,11 @@ fi
 
 
 if [[ $OH2UPDATE == "y" ]]; then
-	# Upgrade from openHAB2 to openHAB testing (3.1.0M2)
-	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	# Upgrade from openHAB2 to openHAB testing (3.1.0Mx)
+	DISPLTEXT='* Purging openHAB...'
+	echoInColor
+	removeOpenHAB
+	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
 	echoInColor
 	backupOpenhabFiles
 	sudo apt purge --assume-yes openhab2
@@ -610,9 +631,11 @@ if [[ $OH2UPDATE == "y" ]]; then
 fi
 
 if [[ $OH3UNTEST == "y" ]]; then
-	# Remove unstable version and install openHAB testing (3.1.0M2)
-	echoInColor
-	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	# Remove unstable version and install openHAB testing (3.1.0Mx)
+	#DISPLTEXT='* Purging openHAB...'
+	#echoInColor
+	#removeOpenHAB3
+	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
 	backupOpenhabFiles
 	installOpenhab3
 	restoreOpenhabFiles
@@ -620,8 +643,11 @@ if [[ $OH3UNTEST == "y" ]]; then
 fi
 
 if [[ $OH3UPDATE == "y" ]]; then
-	# Remove stable version and install openHAB testing (3.1.0M2)
-	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	# Remove stable version and install openHAB testing (3.1.0Mx)
+	#DISPLTEXT='* Purging openHAB...'
+	#echoInColor
+	#removeOpenHAB3
+	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
 	echoInColor
 	backupOpenhabFiles
 	installOpenhab3
@@ -661,58 +687,45 @@ echo ''
 
 DISPLTEXT='* Starting openHAB...'
 echoInColor
+
 case $OH in
 	OH2)
 		DISPLTEXT='  - We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2.'
 		echoInColor
-		sudo systemctl stop openhab.service > /dev/null 2>&1
-		sudo openhab-cli clean-cache
-		sudo systemctl start openhab.service > /dev/null 2>&1
-		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
-		echoInColor
-		echo ''
 		;;
 	OH3Unstable)
 		DISPLTEXT='  - We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab.'
 		echoInColor
-		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-		echoInColor
-		sudo systemctl stop openhab.service > /dev/null 2>&1
-		sudo openhab-cli clean-cache
-		sudo systemctl start openhab.service > /dev/null 2>&1
-		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned.'
 		echoInColor
 		echo ''
 		;;
 	OH3Stable)
 		DISPLTEXT="  - We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
 		echoInColor
-		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
-		echoInColor
-		sudo systemctl stop openhab.service > /dev/null 2>&1
-		sudo openhab-cli clean-cache
-		sudo systemctl start openhab.service > /dev/null 2>&1
-		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned.'
 		echoInColor
 		echo ''
 		;;
 	OH3Testing)
-		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned.'
 		echoInColor
-		sudo systemctl stop openhab.service > /dev/null 2>&1
-		sudo openhab-cli clean-cache
-		sudo systemctl start openhab.service > /dev/null 2>&1
-		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
-		echoInColor
-		echo ''
 		;;
 	none)
 		DISPLTEXT='  - openHAB is installed, please hold on while we start openHAB...'
 		echoInColor
-		sudo systemctl restart openhab.service > /dev/null 2>&1
 		;;
 esac
 
+sudo systemctl daemon-reload > /dev/null 2>&1
+sudo systemctl enable openhab.service > /dev/null 2>&1
+sudo systemctl stop openhab.service > /dev/null 2>&1
+sudo openhab-cli clean-cache
+sudo systemctl start openhab.service > /dev/null 2>&1
+DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+echoInColor
+echo ''
+		
 echo ''
 
 sudo rm -R ~/QbusOH3-Install > /dev/null 2>&1
