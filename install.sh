@@ -15,6 +15,20 @@ IPVAR=''
 SNVAR=''
 JAVA=''
 
+DISPLTEXT=''
+DISPLCOLOR=''
+
+# ============================== Define colors ==============================
+DISPLTEXT=''
+DISPLCOLOR=''
+
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+ORANGE='\033[0;33m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
 # ============================== Define functions ==============================
 spin(){
   spinner="/|\\-/|\\-"
@@ -27,6 +41,14 @@ spin(){
       sleep 0.1
     done
   done
+}
+
+echoInColor(){
+	echo -e "$DISPLCOLOR$DISPLTEXT"
+}
+
+echoInColorP(){
+	echo -en "$DISPLCOLOR$DISPLTEXT"
 }
 
 installMono(){
@@ -134,19 +156,20 @@ installQbus(){
         sudo mkdir /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
         # Copy files to correct location
-        sudo cp -R /tmp/qbus/QbusClient/* /usr/bin/qbus/qbusclient/
-        sudo cp -R /tmp/qbus/QbusServer/* /usr/bin/qbus/qbusserver/
+        sudo cp -R /tmp/qbus/QbusClient/* /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
+        sudo cp -R /tmp/qbus/QbusServer/* /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
         # Modify config file
-        sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config
+        sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
 		
 		# Create cleanup.sh
 		sudo sudo rm /usr/bin/qbus/qbusclient/cleanup.sh  > /dev/null 2>&1
-		echo "#!/bin/bash" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo "" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo '#!/bin/bash' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		echo '' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
 		echo "rm -R /usr/bin/qbus/qbusclient/'HomeCenter\Temp\'" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-		echo "rm /usr/bin/qbus/qbusclient/*.zip" | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
-
+		echo 'rm /usr/bin/qbus/qbusclient/*.zip' | sudo tee -a /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		sudo chmod +x /usr/bin/qbus/qbusclient/cleanup.sh > /dev/null 2>&1
+		sudo sed -i "s|loc|/usr/bin/qbus/qbusclient|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
 
         # Create directory for logging
         sudo mkdir /var/log/qbus/ > /dev/null 2>&1
@@ -193,11 +216,13 @@ startQbus(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
+		
         sudo systemctl daemon-reload > /dev/null 2>&1
         sudo systemctl enable qbusserver.service > /dev/null 2>&1
         sudo systemctl start qbusserver.service > /dev/null 2>&1
         sudo systemctl enable qbusclient.service > /dev/null 2>&1
         sudo systemctl start qbusclient.service > /dev/null 2>&1
+		
         kill -9 $SPIN_PID
 }
 
@@ -226,9 +251,9 @@ checkOH(){
 
 backupOpenhabFiles(){
         if [[$OH="OH2"]]; then
-                sudo cp -R /etc/openhab2 /tmp/openhab2
+                sudo cp -R /etc/openhab2 /tmp/openhab2 > /dev/null 2>&1
         else
-                sudo cp -R /etc/openhab /tmp/openhab
+                sudo cp -R /etc/openhab /tmp/openhab > /dev/null 2>&1
         fi
 }
 
@@ -236,6 +261,7 @@ restoreOpenhabFiles(){
         if [[$OH="OH2"]]; then
                 sudo cp -R /tmp/openhab2 /etc/openhab
         else
+				sudo rm /etc/openhab
                 sudo cp -R /tmp/openhab /etc/openhab
         fi
 }
@@ -244,6 +270,7 @@ installSamba(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15
+		
         sudo apt-get --assume-yes install samba samba-common-bin` > /dev/null 2>&1
         echo '# Windows Internet Name Serving Support Section:' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
         echo '# WINS Support - Tells the NMBD component of Samba to enable its WINS Server' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
@@ -258,6 +285,7 @@ installSamba(){
         echo ' create mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
         echo ' directory mask=0777' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
         echo ' public=no' | sudo tee -a /etc/samba/smb.conf > /dev/null 2>&1
+		
         kill -9 $SPIN_PID
 }
 
@@ -265,11 +293,13 @@ installOpenhab3(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
+		
 		sudo apt-get install apt-transport-https > /dev/null 2>&1
         wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
         sudo apt-get install apt-transport-https > /dev/null 2>&1
         echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
-        sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1y
+        sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
+		
         kill -9 $SPIN_PID
 }
 
@@ -277,67 +307,121 @@ updateRpi(){
         spin &
         SPIN_PID=$!
         trap "kill -9 $SPIN_PID" `seq 0 15`
-		sudo apt-get  --assume-yes update
-		sudo apt-get  --assume-yes upgrade
+		
+		sudo apt-get  --assume-yes update > /dev/null 2>&1
+		sudo apt-get  --assume-yes upgrade > /dev/null 2>&1
+		
         kill -9 $SPIN_PID
 }
 
 
 # ============================== Start installation ==============================
-echo "   ____  _                 ___                           _    _          ____  "
-echo "  / __ \| |               |__ \                         | |  | |   /\   |  _ \ "
-echo " | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |"
-echo " | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < "
-echo " | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |"
-echo "  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ "
-echo "                                       | |                                     "
-echo "                                       |_|                                     "
-echo ""
-echo "Relaese date 02/04/2021 by ks@qbus.be"
-echo ""
-echo 'Welcome to the Qbus2openHAB installer.'
-echo "At the current moment the openHAB binding for Qbus is being checked by openHAB developpers, so you won't find the binding in the repository yet."
-echo "Therefore we will install he current JAR file so you can use the binding anyway, you just don't have to install it from the Bindings list. It will be pre-installed."
-echo "Since we are developping for the latest release of openHAB, the testing (3.1.0M2) version, we will install this version. If you already have an openHAB setup, then "\
+DISPLCOLOR=${ORANGE}
+DISPLTEXT='   ____  _                 ___                           _    _          ____  '
+echoInColor
+DISPLTEXT='  / __ \| |               |__ \                         | |  | |   /\   |  _ \ '
+echoInColor
+DISPLTEXT=" | |  | | |__  _   _ ___     ) |   ___  _ __   ___ _ __ | |__| |  /  \  | |_) |"
+echoInColor
+DISPLTEXT=" | |  | | '_ \| | | / __|   / /   / _ \| '_ \ / _ \ '_ \|  __  | / /\ \ |  _ < "
+echoInColor
+DISPLTEXT=" | |__| | |_) | |_| \__ \  / /_  | (_) | |_) |  __/ | | | |  | |/ ____ \| |_) |"
+echoInColor
+DISPLTEXT="  \___\_\_.__/ \__,_|___/ |____|  \___/| .__/ \___|_| |_|_|  |_/_/    \_\____/ "
+echoInColor
+DISPLTEXT="                                       | |                                     "
+echoInColor
+DISPLTEXT="                                       |_|                                     "
+echoInColor
+DISPLTEXT=""
+echoInColor
+DISPLCOLOR=${NC}
+DISPLTEXT="Release date 08/04/2021 by ks@qbus.be"
+echoInColor
+echo ''
+DISPLTEXT="Welcome to the Qbus2openHAB installer."
+echoInColor
+DISPLCOLOR=${RED}
+DISPLTEXT="At the moment the openHAB binding for Qbus is being checked by openHAB developers, so you won't find the binding in the repository yet."
+echoInColor
+DISPLTEXT="Therefore we will install the current JAR file so you can use the binding anyway, you just don't have to install it from the Bindings list. It will be pre-installed."
+echoInColor
+DISPLTEXT="Since we are developing for the latest release of openHAB, the testing (3.1.0M2) version, we will install this version. If you already have an openHAB setup, then "\
 "we will remove the stable version and change it with the testing version."
+echoInColor
 echo ""
 
 # ---------------- Check for Mono -----------------------
-echo "Checking Mono..."
+DISPLCOLOR=${YELLOW}
+DISPLTEXT="-- Checking Mono..."
+echoInColor
+
 MONO=$(which mono 2>/dev/null)
 if [[ $MONO != "" ]]; then
-        echo 'Mono is already installed.'
+	DISPLCOLOR=${GREEN}
+	DISPLTEXT='     Mono is already installed.'
+	echoInColor
 else
-        read -p 'We did not detect Mono on your system. For the moment the Qbus client/server is based on .net. Therefore Mono is neccesary to run the client/server. Do you agree to install Mono (y/n)?' INSTMONO
-        if [[ $INSTMONO == "n" ]]; then
-                echo 'Sorry, if you do not install Mono, you can not use the Qbus Client/Server application.'
-                exit 1
-        fi
+	read -p "$(echo -e $YELLOW"     We did not detect Mono on your system. For the moment the Qbus client/server is based on .net. Therefore Mono is neccesary to run the client/server. Do you agree to install Mono (y/n)? "$NC)" INSTMONO
+	if [[ $INSTMONO == "n" ]]; then
+		DISPLTEXT='     Sorry, if you do not install Mono, you can not use the Qbus Client/Server application.'
+		DISPLCOLOR=${RED}
+		echoInColor
+		exit 1
+	fi
 fi
 echo ''
 
 # ---------------- Check for Qbus Client/Server -----------------------
-echo 'Checking Qbus client/server...'
+DISPLCOLOR=${YELLOW}
+DISPLTEXT='-- Checking Qbus client/server...'
+echoInColor
+
 QBUS=$(ls /lib/systemd/system/qbusclient.service 2>/dev/null)
 if [[ $QBUS != "" ]]; then
         QBUS2=$(ls /usr/bin/qbus/ 2>/dev/null)
         if [[ $QBUS2 != "" ]]; then
-                echo 'You already have Qbus client and server installed. The files will be updated.'
+                DISPLTEXT='     -You already have Qbus client and server installed. The files will be updated.'
+				DISPLCOLOR=${GREEN}
+				echoInColor
         else
-                echo 'We have detected the previous version of the Qbus client/server. This version will be removed and the newest will be installed. The directory ~/QbusOpenHab will no longer be used. '\
+                DISPLTEXT='     -We have detected the previous version of the Qbus client/server. This version will be removed and the newest will be installed. The directory ~/QbusOpenHab will no longer be used. '\
                 'The Qbus Client/Server application will be installed in /usr/bin/qbus/. We will try to remove ~/QbusOpenHab if this fails, please remove the directory.'
+				DISPLCOLOR=${ORANGE}
+				echoInColor
         fi
 else
-        echo 'Qbus client/server is not found on your sytem. We will install this'
+        DISPLTEXT='     -Qbus client/server is not found on your sytem. We will install this.'
+		DISPLCOLOR=${YELLOW}
+		echoInColor
 fi
 echo ''
 
 # ---------------- Ask Qbus credentials  -----------------------
-echo 'To communicate with your controller, it is necessary that the SDK (DLL) option is enabled. (see https://openhab-wiki.qbus.be/nl/inleiding)'
-read -p 'Enter username of your controller: ' USERVAR
-echo -n 'Enter the password of your controller: '
+DISPLTEXT='      To communicate with your controller, it is necessary that the SDK (DLL) option is enabled. (see https://openhab-wiki.qbus.be/nl/inleiding).'
+DISPLCOLOR=${RED}
+echoInColor
 
-unset password;
+DISPLTEXT='      Make sure the option is enabled before continuing'
+DISPLCOLOR=${RED}
+echoInColor
+
+echo ''
+
+DISPLTEXT='-- Configure client to communicate with CTD controller...'
+DISPLCOLOR=${YELLOW}
+echoInColor
+
+echo ''
+read -p "$(echo -e $YELLOW"     -Enter username of your controller: "$NC)" USERVAR
+
+
+DISPLTEXT='     -Enter the password of your controller: '
+DISPLCOLOR=${YELLOW}
+echoInColorP
+
+echo -e -n "$NC"
+unset pass;
 while IFS= read -r -s -n1 pass; do
   if [[ -z $pass ]]; then
      echo
@@ -352,176 +436,268 @@ if [[ $PASSVAR == '' ]]; then
         PASSVAR='none'
 fi
 
-read -p 'Enter the ip address of your controller: ' IPVAR
-read -p 'Enter the serial number of your controller: ' SNVAR
+read -p "$(echo -e $YELLOW"     -Enter the ip address of your controller: "$NC)" IPVAR
+read -p "$(echo -e $YELLOW"     -Enter the serial number of your controller: "$NC)" SNVAR
 echo ''
 
 # ---------------- Check for Samba -----------------------
-echo 'Checking SMB...'
+DISPLTEXT='-- Checking SMB...'
+DISPLCOLOR=${YELLOW}
+echoInColor
+
 SAMBA=$(ls /etc/samba/ 2>/dev/null)
 if [[ $SAMBA != "" ]]; then
-        echo '- Samba Share is installed.'
-        SMB=$(cat /etc/samba/smb.conf)
+	DISPLTEXT='     -Samba Share is installed.'
+	DISPLCOLOR=${GREEN}
+	echoInColor
+	
+	SMB=$(cat /etc/samba/smb.conf)
 
     if [[ $SMB =~ "path=/etc/openhab2" ]]; then
-      echo '- Samba Share is configured for openhab2, changing to openhab...'
-          sed -i "s|path=/etc/openhab2|path=/etc/openhab|g" /etc/samba/smb.conf
-        fi
+      DISPLTEXT='     -Samba Share is configured for openhab2, changing to openhab...'
+	  DISPLCOLOR=${GREEN}
+	  echoInColor
+      sed -i "s|path=/etc/openhab2|path=/etc/openhab|g" /etc/samba/smb.conf
+    fi
 
-        SMBUSER=$(sudo pdbedit -L 2>/dev/null)
-        if [[ $SMBUSER =~ "openhab" ]]; then
-      echo '- openhab user configured for SMB'
-        else
-          echo '- openhab user is not configured for Samba Share.'
-          echo '- Enter a password for the SMB share for the user openhab & repeat it: '
-          sudo smbpasswd -a openhab
-        fi
+    SMBUSER=$(sudo pdbedit -L 2>/dev/null)
+	
+    if [[ $SMBUSER =~ "openhab" ]]; then
+      DISPLTEXT='     -openHAB user is already configured for Samba Share'
+	  DISPLCOLOR=${GREEN}
+	  echoInColor
+    else
+      DISPLTEXT='     -openHAB user is not configured for Samba Share.'
+	  DISPLCOLOR=${RED}
+	  echoInColor
+	  
+      DISPLTEXT='     -Enter a password for the Samba Share for the user openhab & repeat it: '
+	  DISPLCOLOR=${YELLOW}
+	  echoInColor
+	  
+	  echo -e -n "$NC"
+      sudo smbpasswd -a openhab
+    fi
 else
-        read -p '- We did not detect Samba share on your system. You don not really need SMB, but it makes it easier to configure certain openHAB things. Do you agree to install Samba share (y/n)?' INSTSAMBA
-        if [[ $INSTSAMBA == "n" ]]; then
-                echo '- You choose to not install SMB. This means you have to configure certain openHAB things on this device.'
-        fi
+	read -p "$(echo -e $YELLOW"     -We did not detect Samba Share on your system. You don not really need SMB, but it makes it easier to configure certain openHAB things. Do you agree to install Samba share (y/n)? " $NC)" INSTSAMBA
+        
+	if [[ $INSTSAMBA == "n" ]]; then
+		DISPLTEXT='     -You choose not to install Samba Share. This means you have to configure certain openHAB things on this device.'
+		DISPLCOLOR=${RED}
+		echoInColor
+	fi
 fi
+echo ''
 
 # ---------------- Check Java JDK 11 -----------------------
-JAVA=$(java -version 2>/dev/null)
+DISPLTEXT='-- Checking JAVA JDK 11...'
+DISPLCOLOR=${YELLOW}
+echoInColor
+ 
+JAVA=$(java --version)
+
 if [[ $JAVA =~ "11." ]]; then
-	echo ' - JAVA JDK 11 is installed.'
+	DISPLTEXT='     -JAVA JDK 11 is installed.'
+	DISPLCOLOR=${GREEN}
+	echoInColor
 else
-	read -p '- JAVA JDK 11 is not installed on your system. This is required for the correct functionality of openHAB. Do you agree to install JAVA JDK 11 (y/n)?' INSTJAVA
+    read -p "$(echo -e $YELLOW"     -JAVA JDK 11 is not installed on your system. This is required for the correct functionality of openHAB. Do you agree to install JAVA JDK 11 (y/n)? " $NC)" INSTJAVA
 	if [[ $INSTJAVA == "n" ]]; then
-			echo '- You choose to not install JAVA, You may have problems running openHAB.'
+		DISPLTEXT='     -You choose to not install JAVA, You may have problems running openHAB.'
+		DISPLCOLOR=${RED}
+		echoInColor
 	fi
 fi
 
+echo ""
+
 # ---------------- Check openHAB -----------------------
+DISPLTEXT='-- Checking openHAB...'
+DISPLCOLOR=${YELLOW}
+echoInColor
+
 checkOH
 
+echo ''
+
 case $OH in
-        OH2)
-                read -p '- We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)' OH2UPDATE
-                ;;
-        OH3Unstable)
-                read -p '- We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (y/n) ' OH3UNTEST
-                ;;
-        OH3Testing)
-                echo '- We have detected openHAB running the testing (3.1.0M2) version. This version is compatible with the Qbus Binding.'
-                ;;
-        OH3Stable)
-                read -p '- We have detected openHAB running the stable version (3.0.1). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n) ' OH3UPDATE
-                ;;
-        None)
-                echo '- We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
-                ;;
+	OH2)
+		read -p "$(echo -e $YELLOW"     -We have detected openHAB2 running on your device. The Qbus Binding is developped for the newest version of openHAB (3). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove openHAB2 and install the testing relaese of openHAB? (y/n)? " $NC)" OH2UPDATE
+		;;
+	OH3Unstable)
+		read -p "$(echo -e $YELLOW"     -We have detected openHAB running the unstable (3.1.0-SNAPSHOT) version. Do you want to keep this version? (y) or do you want to install the testing realse (3.1.0M2) which is more stable? (y/n) " $NC)" OH3UNTEST
+		;;
+	OH3Testing)
+		DISPLTEXT='     -We have detected openHAB running the testing (3.1.0M2) version. This version is compatible with the Qbus Binding.'
+		DISPLCOLOR=${GREEN}
+		echoInColor
+		;;
+	OH3Stable)
+		read -p "$(echo -e $YELLOW"     -We have detected openHAB running the stable version (3.0.1). For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) should be used. Do you agree that we remove the main release and install the testing relaese of openHAB? (y/n) " $NC)" OH3UPDATE
+		;;
+	None)
+		DISPLTEXT='     -We did not detected openHAB running on your system. For this moment the binding does not work with te stable release of openHAB (3.0.1), the testing realse (3.1.0M2) will be installed.'
+		DISPLCOLOR=${GREEN}
+		echoInColor
+		;;
 esac
 
 # ---------------- Install -----------------------
+DISPLTEXT='***************************************************************************************************************'
+DISPLCOLOR=${ORANGE}
+echoInColor
 
-echo '* We will start by updating and upgrading your system.'
+DISPLTEXT='* Everything is set, we will start the installation. As they say: Now it is time to relax and drik a coffee... *'
+DISPLCOLOR=${ORANGE}
+echoInColor
+
+DISPLTEXT='***************************************************************************************************************'
+DISPLCOLOR=${ORANGE}
+echoInColor
+
+echo ''
+
+DISPLTEXT='* Updating and upgrading your system.'
+DISPLCOLOR=${YELLOW}
+echoInColor
+
 updateRpi
 
 if [[ $INSTMONO == "y" ]]; then
-        echo '* Installing Mono...'
+        DISPLTEXT='* Installing Mono...'
+		echoInColor
         installMono
+		echo ''
 fi
 
-echo '* Downloading Qbus client and server...'
+DISPLTEXT='* Downloading Qbus client and server...'
+echoInColor
 downloadQbus
+echo ''
 
-echo '* Install Qbus client and server...'
+DISPLTEXT='* Install Qbus client and server...'
+echoInColor
 installQbus
+echo ''
 
 if [[ $INSTJAVA == "y" ]]; then
-        echo '* Installing Java JDK 11...'
+        DISPLTEXT='* Installing Java JDK 11...'
+		echoInColor
         installJava11
+		echo ''
 fi
 
 
 if [[ $OH2UPDATE == "y" ]]; then
         # Upgrade from openHAB2 to openHAB testing (3.1.0M2)
-        echo '* Install openHAB testing (3.1.0M2)...'
+        DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+		echoInColor
         backupOpenhabFiles
         sudo apt purge --assume-yes openhab2
         installOpenhab3
         restoreOpenhabFiles
+		echo ''
 fi
 
 if [[ $OH3UNTEST == "y" ]]; then
         # Remove unstable version and install openHAB testing (3.1.0M2)
-        echo '* Install openHAB testing (3.1.0M2)...'
+		echoInColor
+        DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
         backupOpenhabFiles
         installOpenhab3
         restoreOpenhabFiles
+		echo ''
 fi
 
 if [[ $OH3UPDATE == "y" ]]; then
 	# Remove stable version and install openHAB testing (3.1.0M2)
-	echo '* Install openHAB testing (3.1.0M2)...'
+	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	echoInColor
 	backupOpenhabFiles
 	installOpenhab3
 	restoreOpenhabFiles
+	echo ''
 fi
 
 if [[ $OH == "none" ]]; then
 	# Install openHAB testing (3.1.0M2)
-	echo '* Install openHAB testing (3.1.0M2)...'
+	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	echoInColor
 	installOpenhab3
+	echo ''
 fi
 
-if [[ $INSTSAMBA == "y" ]]; then
-	echo '* Install SMB...'
-	installSamba
-	echo '- Enter a password for the SMB share for the user openhab & repeat it (attention: the password will not be shown): '
-	sudo smbpasswd -a openhab
-fi
-
-echo '* Copy Qbus JAR to openHAB...'
+DISPLTEXT='* Copy Qbus JAR to openHAB...'
+echoInColor
 copyJar
+echo ''
 
-echo '* Starting Qbus services'
+DISPLTEXT='* Starting Qbus services'
+echoInColor
 startQbus
+echo ''
 
-echo '* Creating setctd.sh'
+DISPLTEXT='* Creating setctd.sh'
+echoInColor
 createChangeSettings
+echo ''
 
-echo '* Cleaning up...'
+DISPLTEXT='* Cleaning up...'
+echoInColor
 sudo rm -R /tmp/qbus > /dev/null 2>&1
 sudo rm -R ~/QbusOpenHab/ > /dev/null 2>&1
+echo ''
 
-echo '* Starting openHAB...'
+DISPLTEXT='* Starting openHAB...'
+echoInColor
 case $OH in
 	OH2)
-		echo "- We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2."
+		DISPLTEXT='  - We have removed openHAB2 and installed the testing version of openHAB. We made a back-up of your files and restored them. In case someting went wrong, you can find your backups in /tmp/openhab2.'
+		echoInColor
 		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
 		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		echoInColor
+		echo ''
 		;;
 	OH3Unstable)
-		echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
-		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		DISPLTEXT='  - We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab.'
+		echoInColor
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		echoInColor
 		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
 		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		echoInColor
+		echo ''
 		;;
 	OH3Stable)
-		echo "- We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
-		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		DISPLTEXT="  - We have update openHAB to the testing version. We made a back-up of your files, if they are missing you can find them in /tmp/openhab."
+		echoInColor
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		echoInColor
 		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
 		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		echoInColor
+		echo ''
 		;;
 	OH3Testing)
-		echo '- Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		DISPLTEXT='  - Since we have installed a new JAR, the cache needs to be cleaned. Please select yes to clean the cache'
+		echoInColor
 		sudo /bin/systemctl stop openhab.service > /dev/null 2>&1
 		sudo openhab-cli clean-cache
 		sudo /bin/systemctl start openhab.service > /dev/null 2>&1
-		echo 'openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient.'
+		DISPLTEXT='  !!! openHAB is restarting, but because we cleaned the cache this will take much longer than usual. Please be patient !!!'
+		echoInColor
+		echo ''
 		;;
 	none)
-		echo '- openHAB is installed, please hold on while we start openHAB...'
+		DISPLTEXT='  - openHAB is installed, please hold on while we start openHAB...'
+		echoInColor
 		sudo /bin/systemctl restart openhab.service > /dev/null 2>&1
 		;;
 esac
@@ -530,9 +706,30 @@ echo ''
 
 sudo rm -R ~/QbusOH3-Install > /dev/null 2>&1
 
-echo 'The installation is finished now. To make sure everything is set up correctly and to avoid problems, we suggest to do a reboot.'
-read -p 'Do you want to reboot now? (y/n) ' REBOOT
-if [[ $REBOOT == "y" ]]; then
-        echo 'Rebooting the system...'
-        sudo reboot
+if [[ $INSTSAMBA == "y" ]]; then
+	DISPLTEXT='* Install SMB...'
+	echoInColor
+	installSamba
+	DISPLTEXT='- Enter a password for the SMB share for the user openhab & repeat it (attention: the password will not be shown): '
+	echoInColor
+	sudo smbpasswd -a openhab
+	echo ''
 fi
+
+DISPLTEXT='The installation is finished now. To make sure everything is set up correctly and to avoid problems, we suggest to do a reboot.'
+echoInColor
+
+echo ''
+
+read -p "$(echo -e $YELLOW"Do you want to reboot now? (y/n) " $NC)" REBOOT
+
+if [[ $REBOOT == "y" ]]; then
+	DISPLTEXT='Rebooting the system...'
+	echoInColor
+	sudo reboot
+else
+	DISPLTEXT='You choose to not reboot your system. If you run into problems, first trys to reboot!'
+	echoInColor
+fi
+
+
