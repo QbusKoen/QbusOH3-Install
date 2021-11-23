@@ -135,8 +135,8 @@ createChangeSettings(){
 	echo "echo 'Type=simple' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 	echo "echo 'ExecStart= mono /usr/bin/qbus/qbusclient/QbusClient.exe '\$IPVAR' '\$USERVAR' '\$PASSVAR' '\$SNVAR' 100' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 	echo "echo 'Restart=always' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-	echo "echo 'StandardOutput=file:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
-	echo "echo 'StandardError=file:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'StandardOutput=append:/var/log/qbus/qbusclient.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
+	echo "echo 'StandardError=append:/var/log/qbus/qbusclient_error.log' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 	echo "echo '' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 	echo "echo '[Install]' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
 	echo "echo 'WantedBy=multi-user.target' | sudo tee -a /lib/systemd/system/qbusclient.service > /dev/null 2>&1" | sudo tee -a /tmp/qbus/setctd.sh > /dev/null 2>&1
@@ -307,7 +307,7 @@ installOpenhab3(){
 	sudo apt-get install apt-transport-https > /dev/null 2>&1
 	wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
 	sudo rm /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
-	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
+	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
 	sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
 	
 	kill -9 $SPIN_PID
