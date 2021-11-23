@@ -61,16 +61,6 @@ installMono(){
 	kill -9 $SPIN_PID
 }
 
-downloadQbus(){
-	spin &
-	SPIN_PID=$!
-	trap "kill -9 $SPIN_PID" `seq 0 15`
-	
-	git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus/ > /dev/null 2>&1
-	
-	kill -9 $SPIN_PID
-}
-
 installJava11(){
 	spin &
 	SPIN_PID=$!
@@ -81,9 +71,19 @@ installJava11(){
 	kill -9 $SPIN_PID
 }
 
+downloadQbus(){
+	spin &
+	SPIN_PID=$!
+	trap "kill -9 $SPIN_PID" `seq 0 15`
+	
+	git clone https://github.com/QbusKoen/QbusOH3 /tmp/qbus/ > /dev/null 2>&1
+	
+	kill -9 $SPIN_PID
+}
+
 copyJar(){
 	sudo rm /usr/share/openhab/addons/org.openhab.binding.qbus.* > /dev/null 2>&1
-	sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.1.0-SNAPSHOT.jar /usr/share/openhab/addons/ > /dev/null 2>&1
+	sudo cp /tmp/qbus/JAR/org.openhab.binding.qbus-3.2.0-SNAPSHOT.jar /usr/share/openhab/addons/ > /dev/null 2>&1
 }
 
 createChangeSettings(){
@@ -164,8 +164,8 @@ installQbus(){
 	sudo mkdir /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
 	# Copy files to correct location
-	sudo cp -R /tmp/qbus/QbusClient/* /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
-	sudo cp -R /tmp/qbus/QbusServer/* /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
+	sudo cp -R /tmp/qbus/QbusClient/. /usr/bin/qbus/qbusclient/ > /dev/null 2>&1
+	sudo cp -R /tmp/qbus/QbusServer/. /usr/bin/qbus/qbusserver/ > /dev/null 2>&1
 
 	# Modify config file
 	sudo sed -i "s|<value>.\+</value>|<value>/usr/bin/qbus/qbusclient/</value>|g" /usr/bin/qbus/qbusclient/QbusClient.exe.config > /dev/null 2>&1
@@ -306,6 +306,7 @@ installOpenhab3(){
 	
 	sudo apt-get install apt-transport-https > /dev/null 2>&1
 	wget -qO - 'https://bintray.com/user/downloadSubjectPublicKey?username=openhab' | sudo apt-key add - > /dev/null 2>&1
+	sudo rm /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
 	echo 'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab.list > /dev/null 2>&1
 	sudo apt-get --assume-yes update && sudo apt-get --assume-yes install openhab > /dev/null 2>&1
 	
@@ -338,7 +339,6 @@ updateRpi(){
 	trap "kill -9 $SPIN_PID" `seq 0 15`
 	
 	sudo apt-get  --assume-yes update > /dev/null 2>&1
-	#sudo apt-get  --assume-yes upgrade #> /dev/null 2>&1
 	
 	kill -9 $SPIN_PID
 }
@@ -365,7 +365,7 @@ echoInColor
 DISPLTEXT=""
 echoInColor
 DISPLCOLOR=${NC}
-DISPLTEXT="Release date 08/04/2021 by ks@qbus.be"
+DISPLTEXT="Release date 23/11/2021 by ks@qbus.be"
 echoInColor
 echo ''
 DISPLTEXT="Welcome to the Qbus2openHAB installer."
@@ -375,7 +375,7 @@ DISPLTEXT="At the moment the openHAB binding for Qbus is being checked by openHA
 echoInColor
 DISPLTEXT="Therefore we will install the current JAR file so you can use the binding anyway, you just don't have to install it from the Bindings list. It will be pre-installed."
 echoInColor
-DISPLTEXT="Since we are developing for the latest release of openHAB, the testing (3.1.0M2) version, we will install this version. If you already have an openHAB setup, then "\
+DISPLTEXT="Since we are developing for the latest release of openHAB, the testing (3.2.0M4) version, we will install this version. If you already have an openHAB setup, then "\
 "we will remove the stable version and change it with the testing version."
 echoInColor
 echo ""
@@ -617,47 +617,53 @@ fi
 
 
 if [[ $OH2UPDATE == "y" ]]; then
-	# Upgrade from openHAB2 to openHAB testing (3.1.0Mx)
+	# Upgrade from openHAB2 to openHAB testing (3.2.0Mx)
 	DISPLTEXT='* Purging openHAB...'
 	echoInColor
 	removeOpenHAB
-	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
+	DISPLTEXT='* Install openHAB testing (3.2.0Mx)...'
 	echoInColor
 	backupOpenhabFiles
 	sudo apt purge --assume-yes openhab2
 	installOpenhab3
 	restoreOpenhabFiles
+	sudo chown --recursive openhab:openhab /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
+	sudo chmod --recursive ug+wX /opt /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
 	echo ''
 fi
 
 if [[ $OH3UNTEST == "y" ]]; then
-	# Remove unstable version and install openHAB testing (3.1.0Mx)
+	# Remove unstable version and install openHAB testing (3.2.0Mx)
 	#DISPLTEXT='* Purging openHAB...'
 	#echoInColor
 	#removeOpenHAB3
-	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
+	DISPLTEXT='* Install openHAB testing (3.2.0Mx)...'
 	backupOpenhabFiles
 	installOpenhab3
 	restoreOpenhabFiles
+	sudo chown --recursive openhab:openhab /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
+	sudo chmod --recursive ug+wX /opt /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
 	echo ''
 fi
 
 if [[ $OH3UPDATE == "y" ]]; then
 	# Remove stable version and install openHAB testing (3.1.0Mx)
-	#DISPLTEXT='* Purging openHAB...'
-	#echoInColor
-	#removeOpenHAB3
-	DISPLTEXT='* Install openHAB testing (3.1.0Mx)...'
+	DISPLTEXT='* Purging openHAB...'
 	echoInColor
 	backupOpenhabFiles
+	removeOpenHAB3
+	DISPLTEXT='* Install openHAB testing (3.2.0Mx)...'
+	echoInColor
 	installOpenhab3
 	restoreOpenhabFiles
+	sudo chown --recursive openhab:openhab /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
+	sudo chmod --recursive ug+wX /opt /etc/openhab /var/lib/openhab /var/log/openhab /usr/share/openhab
 	echo ''
 fi
 
 if [[ $OH == "none" ]]; then
 	# Install openHAB testing (3.1.0M2)
-	DISPLTEXT='* Install openHAB testing (3.1.0M2)...'
+	DISPLTEXT='* Install openHAB testing (3.2.0Mx)...'
 	echoInColor
 	backupOpenhabFiles
 	installOpenhab3
@@ -682,7 +688,9 @@ echo ''
 DISPLTEXT='* Cleaning up...'
 echoInColor
 sudo rm -R /tmp/qbus > /dev/null 2>&1
-sudo rm -R ~/QbusOpenHab/ > /dev/null 2>&1
+sudo rm -R /tmp/openhab2 > /dev/null 2>&1
+sudo rm -R /tmp/openhab > /dev/null 2>&1
+sudo rm -R ~/QbusOH3-Install > /dev/null 2>&1
 echo ''
 
 DISPLTEXT='* Starting openHAB...'
@@ -728,7 +736,6 @@ echo ''
 		
 echo ''
 
-sudo rm -R ~/QbusOH3-Install > /dev/null 2>&1
 
 if [[ $INSTSAMBA == "y" ]]; then
 	DISPLTEXT='* Install SMB...'
